@@ -1,0 +1,68 @@
+import type { Product } from '../types'
+
+export const products: Product[] = [
+	{
+		id: 1,
+		name: 'Sac de randonnée',
+		category: 'Accessoires',
+		price: 69.9,
+		description: 'Sac léger de 30 litres avec housse de pluie.',
+		stock: 14,
+	},
+	{
+		id: 2,
+		name: 'Gourde inox',
+		category: 'Équipement',
+		price: 24.5,
+		description: 'Gourde isotherme en acier inoxydable, capacité 750 ml.',
+		stock: 32,
+	},
+	{
+		id: 3,
+		name: 'Lampe frontale',
+		category: 'Éclairage',
+		price: 38,
+		description: 'Lampe frontale rechargeable avec plusieurs niveaux d’intensité.',
+		stock: 8,
+	},
+	{
+		id: 4,
+		name: 'Veste imperméable',
+		category: 'Vêtements',
+		price: 119,
+		description: 'Veste respirante conçue pour les sorties sous la pluie.',
+		stock: 6,
+	},
+	{
+		id: 5,
+		name: 'Bâtons de marche',
+		category: 'Accessoires',
+		price: 54.9,
+		description: 'Paire de bâtons télescopiques avec poignées ergonomiques.',
+		stock: 19,
+	},
+	{
+		id: 6,
+		name: 'Trousse de premiers secours',
+		category: 'Sécurité',
+		price: 17.9,
+		description: 'Kit compact de premiers secours pour les randonnées.',
+		stock: 27,
+	},
+	{
+		id: 7,
+		name: 'Chaussures de randonnée',
+		category: 'Chaussures',
+		price: 145,
+		description: 'Chaussures montantes avec semelle adhérente.',
+		stock: 11,
+	},
+	{
+		id: 8,
+		name: 'Couverture de survie',
+		category: 'Sécurité',
+		price: 6.5,
+		description: 'Couverture légère et compacte pour les situations d’urgence.',
+		stock: 41,
+	},
+]
