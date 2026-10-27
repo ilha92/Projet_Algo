@@ -1,11 +1,10 @@
 import { products } from '../data/products'
-import { linearSearch } from '../algorithms/search'
 
 export function renderProductList(container: HTMLElement): void {
 	container.innerHTML = `
 		<main>
 			<h1>Liste des produits</h1>
-			<label for="product-search">Rechercher par numéro exact</label>
+			<label for="product-search">Rechercher par nom, catégorie ou numéro</label>
 			<input id="product-search" type="search">
 			<p id="search-result-count" aria-live="polite"></p>
 			<ul id="product-results"></ul>
@@ -26,7 +25,16 @@ export function renderProductList(container: HTMLElement): void {
 				product.category.toLocaleLowerCase('fr'),
 				String(product.id),
 			]
-			if (query === '' || linearSearch(searchableValues, query) !== -1) {
+			let isMatch = query === ''
+
+			for (const value of searchableValues) {
+				if (value.includes(query)) {
+					isMatch = true
+					break
+				}
+			}
+
+			if (isMatch) {
 				matchingProducts.push(product)
 			}
 		}
