@@ -1,9 +1,9 @@
-import { products } from '../data/products'
-import { insertionSort, mergeSort, quickSort } from '../algorithms/sorting'
-import type { Product } from '../types'
+import { products } from "../data/products";
+import { insertionSort, mergeSort, quickSort } from "../algorithms/sorting";
+import type { Product } from "../types";
 
 export function renderProductList(container: HTMLElement): void {
-	container.innerHTML = `
+  container.innerHTML = `
 		<main>
 			<h1>Liste des produits</h1>
 			<label for="product-search">Rechercher par nom, catégorie ou numéro</label>
@@ -15,71 +15,84 @@ export function renderProductList(container: HTMLElement): void {
 			<option value="merge">Tri fusion</option>
 			</select>
 			<p id="search-result-count" aria-live="polite"></p>
+			<p id="execution-time" aria-live="polite">Temps de tri : pas encore mesuré</p>
 			<ul id="product-results"></ul>
 		</main>
-	`
+	`;
 
-	const searchInput = container.querySelector<HTMLInputElement>('#product-search')!
-	const algorithmSelect = container.querySelector<HTMLSelectElement>('#sort-algorithm')!
-	const resultCount = container.querySelector<HTMLParagraphElement>('#search-result-count')!
-	const resultList = container.querySelector<HTMLUListElement>('#product-results')!
+  const searchInput =
+    container.querySelector<HTMLInputElement>("#product-search")!;
+  const algorithmSelect =
+    container.querySelector<HTMLSelectElement>("#sort-algorithm")!;
+  const resultCount = container.querySelector<HTMLParagraphElement>(
+    "#search-result-count",
+  )!;
+  const resultList =
+    container.querySelector<HTMLUListElement>("#product-results")!;
+  const executionTime =
+    container.querySelector<HTMLParagraphElement>("#execution-time")!;
 
-	const updateResults = (): void => {
-		const searchText = searchInput.value.trim().toLocaleLowerCase('fr')
-		const matchingProducts: Product[] = []
+  const updateResults = (): void => {
+    const searchText = searchInput.value.trim().toLocaleLowerCase("fr");
+    const matchingProducts: Product[] = [];
 
-		for (const product of products) {
-			const searchableValues = [
-				product.name.toLocaleLowerCase('fr'),
-				product.category.toLocaleLowerCase('fr'),
-				String(product.id),
-			]
-			let isMatch = searchText === ''
+    for (const product of products) {
+      const searchableValues = [
+        product.name.toLocaleLowerCase("fr"),
+        product.category.toLocaleLowerCase("fr"),
+        String(product.id),
+      ];
+      let isMatch = searchText === "";
 
-			for (const value of searchableValues) {
-				if (value.includes(searchText)) {
-					isMatch = true
-					break
-				}
-			}
+      for (const value of searchableValues) {
+        if (value.includes(searchText)) {
+          isMatch = true;
+          break;
+        }
+      }
 
-			if (isMatch) {
-				matchingProducts.push(product)
-			}
-		}
+      if (isMatch) {
+        matchingProducts.push(product);
+      }
+    }
 
-		let sortedProducts: Product[]
+    let sortedProducts: Product[];
+    const start = performance.now();
 
-		switch (algorithmSelect.value) {
-			case 'quick':
-				sortedProducts = quickSort(matchingProducts, compareByPrice)
-				break
-			case 'merge':
-				sortedProducts = mergeSort(matchingProducts, compareByPrice)
-				break
-			default:
-				sortedProducts = insertionSort(matchingProducts, compareByPrice)
-		}
+    switch (algorithmSelect.value) {
+      case "quick":
+        sortedProducts = quickSort(matchingProducts, compareByPrice);
+        break;
+      case "merge":
+        sortedProducts = mergeSort(matchingProducts, compareByPrice);
+        break;
+      default:
+        sortedProducts = insertionSort(matchingProducts, compareByPrice);
+    }
 
-		resultList.replaceChildren()
-		for (const product of sortedProducts) {
-			const item = document.createElement('li')
-			const formattedPrice = product.price.toLocaleString('fr-FR', {
-				style: 'currency',
-				currency: 'EUR',
-			})
-			item.textContent = `${formattedPrice} — ${product.name} — ${product.category} (n° ${product.id})`
-			resultList.append(item)
-		}
+    const end = performance.now();
+    const duration = end - start;
+    executionTime.textContent = `Temps de tri : ${duration.toFixed(2)} ms`;
+    resultList.replaceChildren();
+    for (const product of sortedProducts) {
+      const item = document.createElement("li");
+      const formattedPrice = product.price.toLocaleString("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      });
+      item.textContent = `${formattedPrice} — ${product.name} — ${product.category} (n° ${product.id})`;
+      resultList.append(item);
+    }
 
-		resultCount.textContent = searchText === ''
-			? `${matchingProducts.length} produits`
-			: `${matchingProducts.length} résultat${matchingProducts.length > 1 ? 's' : ''}`
-	}
+    resultCount.textContent =
+      searchText === ""
+        ? `${matchingProducts.length} produits`
+        : `${matchingProducts.length} résultat${matchingProducts.length > 1 ? "s" : ""}`;
+  };
 
-	searchInput.addEventListener('input', updateResults)
-	updateResults()
-	algorithmSelect.addEventListener('change', updateResults)
+  searchInput.addEventListener("input", updateResults);
+  updateResults();
+  algorithmSelect.addEventListener("change", updateResults);
 }
 
-const compareByPrice = (a: Product, b: Product): number => a.price - b.price
+const compareByPrice = (a: Product, b: Product): number => a.price - b.price;
