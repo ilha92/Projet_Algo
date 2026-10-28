@@ -1,3 +1,4 @@
+// Insertion sort insère chaque élément à sa place dans la partie déjà triée du tableau.
 export function insertionSort<T>(
   arr: T[],
   compare: (a: T, b: T) => number
@@ -19,35 +20,37 @@ export function insertionSort<T>(
 	return sorted
 }
 
-export function quickSort(arr: number[]): number[] {
+// Quick sort divise le tableau en sous-tableaux autour d'un pivot et trie récursivement les sous-tableaux.
+export function quickSort<T>(arr: T[], compare: (a: T, b: T) => number): T[] {
 	if (arr.length < 2) return [...arr]
 
 	const pivotIndex = Math.floor(arr.length / 2)
 	const pivot = arr[pivotIndex]
-	const left: number[] = []
-	const right: number[] = []
+	const left: T[] = []
+	const right: T[] = []
 
 	for (let index = 0; index < arr.length; index += 1) {
 		if (index === pivotIndex) continue
-		if (arr[index] <= pivot) left.push(arr[index])
+		if (compare(arr[index], pivot) <= 0) left.push(arr[index])
 		else right.push(arr[index])
 	}
 
-	return [...quickSort(left), pivot, ...quickSort(right)]
+	return [...quickSort(left, compare), pivot, ...quickSort(right, compare)]
 }
 
-export function mergeSort(arr: number[]): number[] {
+// Merge sort divise le tableau en deux, trie chaque moitié récursivement, puis fusionne les moitiés triées.
+export function mergeSort<T>(arr: T[], compare: (a: T, b: T) => number): T[] {
 	if (arr.length < 2) return [...arr]
 
 	const middle = Math.floor(arr.length / 2)
-	const left = mergeSort(arr.slice(0, middle))
-	const right = mergeSort(arr.slice(middle))
-	const merged: number[] = []
+	const left = mergeSort(arr.slice(0, middle), compare)
+	const right = mergeSort(arr.slice(middle), compare)
+	const merged: T[] = []
 	let leftIndex = 0
 	let rightIndex = 0
 
 	while (leftIndex < left.length && rightIndex < right.length) {
-		if (left[leftIndex] <= right[rightIndex]) {
+		if (compare(left[leftIndex], right[rightIndex]) <= 0) {
 			merged.push(left[leftIndex])
 			leftIndex += 1
 		} else {
