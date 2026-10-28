@@ -1,4 +1,5 @@
 import { products } from "../data/products";
+import { router } from "../router/stackRouter";
 import { insertionSort, mergeSort, quickSort } from "../algorithms/sorting";
 import type { Product } from "../types";
 
@@ -76,11 +77,37 @@ export function renderProductList(container: HTMLElement): void {
     resultList.replaceChildren();
     for (const product of sortedProducts) {
       const item = document.createElement("li");
-      const formattedPrice = product.price.toLocaleString("fr-FR", {
+      const idCell = document.createElement("td");
+      const nameCell = document.createElement("td");
+      const categoryCell = document.createElement("td");
+      const priceCell = document.createElement("td");
+      const stockCell = document.createElement("td");
+      const detailCell = document.createElement("td");
+      idCell.textContent = String(product.id);
+      nameCell.textContent = product.name;
+      categoryCell.textContent = product.category;
+      priceCell.textContent = product.price.toLocaleString("fr-FR", {
         style: "currency",
         currency: "EUR",
       });
-      item.textContent = `${formattedPrice} — ${product.name} — ${product.category} (n° ${product.id})`;
+      stockCell.textContent = String(product.stock);
+      const detailLink = document.createElement("a");
+      detailLink.href = `/product/${product.id}`;
+      detailLink.textContent = "Voir le détail";
+      detailLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.history.pushState({}, "", `/product/${product.id}`);
+        router(container);
+      });
+      detailCell.append(detailLink);
+      item.append(
+        idCell,
+        nameCell,
+        categoryCell,
+        priceCell,
+        stockCell,
+        detailCell,
+      );
       resultList.append(item);
     }
 
