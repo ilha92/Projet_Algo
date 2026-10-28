@@ -1,4 +1,6 @@
 import { products } from '../data/products'
+import { insertionSort, mergeSort, quickSort } from '../algorithms/sorting'
+import type { Product } from '../types'
 
 export function renderProductList(container: HTMLElement): void {
 	container.innerHTML = `
@@ -18,12 +20,13 @@ export function renderProductList(container: HTMLElement): void {
 	`
 
 	const searchInput = container.querySelector<HTMLInputElement>('#product-search')!
+	const algorithmSelect = container.querySelector<HTMLSelectElement>('#sort-algorithm')!
 	const resultCount = container.querySelector<HTMLParagraphElement>('#search-result-count')!
 	const resultList = container.querySelector<HTMLUListElement>('#product-results')!
 
 	const updateResults = (): void => {
 		const searchText = searchInput.value.trim().toLocaleLowerCase('fr')
-		const matchingProducts = []
+		const matchingProducts: Product[] = []
 
 		for (const product of products) {
 			const searchableValues = [
@@ -45,10 +48,27 @@ export function renderProductList(container: HTMLElement): void {
 			}
 		}
 
+		let sortedProducts: Product[]
+
+		switch (algorithmSelect.value) {
+			case 'quick':
+				sortedProducts = quickSort(matchingProducts, compareByPrice)
+				break
+			case 'merge':
+				sortedProducts = mergeSort(matchingProducts, compareByPrice)
+				break
+			default:
+				sortedProducts = insertionSort(matchingProducts, compareByPrice)
+		}
+
 		resultList.replaceChildren()
-		for (const product of matchingProducts) {
+		for (const product of sortedProducts) {
 			const item = document.createElement('li')
-			item.textContent = `${product.name} — ${product.category} (n° ${product.id})`
+			const formattedPrice = product.price.toLocaleString('fr-FR', {
+				style: 'currency',
+				currency: 'EUR',
+			})
+			item.textContent = `${formattedPrice} — ${product.name} — ${product.category} (n° ${product.id})`
 			resultList.append(item)
 		}
 
@@ -59,4 +79,7 @@ export function renderProductList(container: HTMLElement): void {
 
 	searchInput.addEventListener('input', updateResults)
 	updateResults()
+	algorithmSelect.addEventListener('change', updateResults)
 }
+
+const compareByPrice = (a: Product, b: Product): number => a.price - b.price
