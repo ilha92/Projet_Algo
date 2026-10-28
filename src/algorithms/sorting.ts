@@ -1,11 +1,14 @@
-export function insertionSort(arr: number[]): number[] {
+export function insertionSort<T>(
+  arr: T[],
+  compare: (a: T, b: T) => number
+): T[] {
 	const sorted = [...arr]
 
 	for (let index = 1; index < sorted.length; index += 1) {
 		const current = sorted[index]
 		let position = index - 1
 
-		while (position >= 0 && sorted[position] > current) {
+		while (position >= 0 && compare(sorted[position], current) > 0) {
 			sorted[position + 1] = sorted[position]
 			position -= 1
 		}
