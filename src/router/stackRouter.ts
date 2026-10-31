@@ -29,12 +29,15 @@ export function renderRoute(container: HTMLElement): void {
 
 export function navigate(path: string, container: HTMLElement): void {
   routeStack.push(path);
+  window.history.pushState({}, "", path);
   renderRoute(container);
 }
 
 export function goBack(container: HTMLElement): void {
   if (routeStack.length > 1) {
     routeStack.pop();
+    const previousPath = routeStack[routeStack.length - 1] ?? "/";
+    window.history.pushState({}, "", previousPath);
     renderRoute(container);
   }
 }
