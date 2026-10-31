@@ -31,3 +31,10 @@ export function navigate(path: string, container: HTMLElement): void {
   routeStack.push(path);
   renderRoute(container);
 }
+
+export function goBack(container: HTMLElement): void {
+  if (routeStack.length > 1) {
+    routeStack.pop();
+    renderRoute(container);
+  }
+}

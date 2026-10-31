@@ -1,4 +1,5 @@
 import { products } from "../data/products";
+import { goBack } from "../router/stackRouter";
 
 export function renderProductDetail(
   container: HTMLElement,
@@ -28,7 +29,12 @@ export function renderProductDetail(
       <p>Prix : ${formattedPrice}</p>
       <p>Stock : ${product.stock}</p>
       <p>${product.description}</p>
-      <a href="/">Retour à la liste</a>
+      <button id="back-btn">Retour</button>
     </main>
   `;
+
+  const backButton = container.querySelector<HTMLButtonElement>("#back-btn");
+  backButton?.addEventListener("click", () => {
+    goBack(container);
+  });
 }
