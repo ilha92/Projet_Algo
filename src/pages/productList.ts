@@ -1,7 +1,7 @@
 import { products } from "../data/products";
-import { router } from "../router/stackRouter";
 import { insertionSort, mergeSort, quickSort } from "../algorithms/sorting";
 import type { Product } from "../types";
+import { navigate } from "../router/stackRouter";
 
 export function renderProductList(container: HTMLElement): void {
   container.innerHTML = `
@@ -96,8 +96,7 @@ export function renderProductList(container: HTMLElement): void {
       detailLink.textContent = "Voir le détail";
       detailLink.addEventListener("click", (event) => {
         event.preventDefault();
-        window.history.pushState({}, "", `/product/${product.id}`);
-        router(container);
+        navigate(`/product/${product.id}`, container);
       });
       detailCell.append(detailLink);
       item.append(

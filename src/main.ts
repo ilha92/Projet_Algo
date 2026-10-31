@@ -1,4 +1,4 @@
-import { router } from "./router/stackRouter";
+import { renderRoute } from "./router/stackRouter";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -8,7 +8,7 @@ if (!app) {
 
 // On peux aussi recharger le routeur quand l’utilisateur revient en arrière :
 window.addEventListener("popstate", () => {
-  router(app);
+  renderRoute(app);
 });
 
-router(app);
+renderRoute(app);

@@ -1,17 +1,17 @@
 import { renderProductList } from "../pages/productList";
 import { renderProductDetail } from "../pages/productDetail";
 
-export function router(container: HTMLElement): void {
-  // l’URL actuelle
-  const path = window.location.pathname;
+const routeStack: string[] = ["/"];
 
-  if (path === "/" || path === "") {
+export function renderRoute(container: HTMLElement): void {
+  const currentPath = routeStack[routeStack.length - 1] ?? "/";
+
+  if (currentPath === "/" || currentPath === "") {
     renderProductList(container);
     return;
   }
 
-  // Vérifie si l’URL correspond à la route du détail d’un produit
-  const match = path.match(/^\/product\/(\d+)$/);
+  const match = currentPath.match(/^\/product\/(\d+)$/);
 
   if (match) {
     const productId = Number(match[1]);
@@ -25,4 +25,9 @@ export function router(container: HTMLElement): void {
       <a href="/">Retour à la liste</a>
     </main>
   `;
+}
+
+export function navigate(path: string, container: HTMLElement): void {
+  routeStack.push(path);
+  renderRoute(container);
 }
